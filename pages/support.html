@@ -1,0 +1,77 @@
+<div class="panel" id="panel-support" style="width:100%;overflow-y:auto;">
+      <div style="max-width:800px;margin:0 auto;padding:24px 20px 100px;">
+
+        <!-- 탭 -->
+        <div style="display:flex;gap:8px;margin-bottom:20px;background:var(--gray-light);border-radius:12px;padding:4px;">
+          <button id="stab-ai"   onclick="switchSupportTab('ai')"   style="flex:1;padding:9px;border:none;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;background:var(--green-main);color:#fff;font-family:var(--font-body);">🤖 AI 상담</button>
+          <button id="stab-faq"  onclick="switchSupportTab('faq')"  style="flex:1;padding:9px;border:none;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;background:transparent;color:var(--gray);font-family:var(--font-body);">📋 FAQ</button>
+          <button id="stab-ask"  onclick="switchSupportTab('ask')"  style="flex:1;padding:9px;border:none;border-radius:9px;font-size:13px;font-weight:700;cursor:pointer;background:transparent;color:var(--gray);font-family:var(--font-body);">✉️ 문의 접수</button>
+        </div>
+
+        <!-- AI 상담 탭 -->
+        <div id="stab-content-ai">
+          <div style="background:linear-gradient(135deg,#0a2e1a,#1F4D30);border-radius:16px;padding:20px;margin-bottom:16px;color:#fff;">
+            <div style="font-size:15px;font-weight:800;margin-bottom:4px;">🤖 AI 상담사</div>
+            <div style="font-size:12px;color:rgba(255,255,255,0.7);">식용유 품질·납품·수거에 관한 질문에 즉시 답변해드려요</div>
+          </div>
+          <div id="aiChatMessages" style="min-height:200px;max-height:400px;overflow-y:auto;background:var(--white);border-radius:12px;padding:16px;margin-bottom:12px;border:1px solid var(--gray-light);">
+            <div style="display:flex;gap:10px;margin-bottom:12px;">
+              <div style="width:32px;height:32px;background:var(--green-main);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;">🤖</div>
+              <div style="background:#F0F9F4;border-radius:12px;border-top-left-radius:2px;padding:12px 14px;max-width:85%;">
+                <div style="font-size:13px;line-height:1.7;">안녕하세요! 식용유니버스 AI 상담사입니다 😊<br>식용유 품질, 납품, 폐유 수거, 계산서 발행 등 궁금하신 점을 편하게 물어보세요!</div>
+              </div>
+            </div>
+          </div>
+          <div style="display:flex;gap:8px;">
+            <input id="aiChatInput" type="text" placeholder="질문을 입력하세요..." onkeydown="if(event.key==='Enter')sendAiChat()"
+              style="flex:1;padding:12px 14px;border:1.5px solid var(--gray-light);border-radius:10px;font-size:13px;font-family:var(--font-body);outline:none;"
+              onfocus="this.style.borderColor='var(--green-main)'" onblur="this.style.borderColor='var(--gray-light)'">
+            <button onclick="sendAiChat()" style="background:var(--green-main);border:none;border-radius:10px;padding:12px 18px;color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--font-body);">전송</button>
+          </div>
+          <div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:10px;">
+            <button onclick="setAiChat('식용유 품질 기준이 어떻게 되나요?')" style="background:#F0F9F4;border:1px solid #C8E6C9;border-radius:20px;padding:6px 12px;font-size:11px;cursor:pointer;font-family:var(--font-body);color:var(--green-dark);">식용유 품질 기준</button>
+            <button onclick="setAiChat('폐유 수거 주기는 어떻게 되나요?')" style="background:#F0F9F4;border:1px solid #C8E6C9;border-radius:20px;padding:6px 12px;font-size:11px;cursor:pointer;font-family:var(--font-body);color:var(--green-dark);">폐유 수거 주기</button>
+            <button onclick="setAiChat('계산서 발행은 어떻게 하나요?')" style="background:#F0F9F4;border:1px solid #C8E6C9;border-radius:20px;padding:6px 12px;font-size:11px;cursor:pointer;font-family:var(--font-body);color:var(--green-dark);">계산서 발행 방법</button>
+            <button onclick="setAiChat('납품 단가 VAT는 어떻게 계산되나요?')" style="background:#F0F9F4;border:1px solid #C8E6C9;border-radius:20px;padding:6px 12px;font-size:11px;cursor:pointer;font-family:var(--font-body);color:var(--green-dark);">VAT 계산</button>
+          </div>
+        </div>
+
+        <!-- FAQ 탭 -->
+        <div id="stab-content-faq" style="display:none;">
+          <div id="faqList"></div>
+        </div>
+
+        <!-- 문의 접수 탭 -->
+        <div id="stab-content-ask" style="display:none;">
+          <div style="background:var(--white);border-radius:16px;padding:20px;box-shadow:var(--shadow);margin-bottom:16px;">
+            <div style="font-size:14px;font-weight:800;margin-bottom:16px;">✉️ 새 문의 접수</div>
+            <div style="margin-bottom:12px;">
+              <label style="font-size:12px;font-weight:700;color:var(--gray);margin-bottom:6px;display:block;">문의 유형</label>
+              <select id="askType" style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-light);border-radius:8px;font-size:13px;font-family:var(--font-body);">
+                <option value="품질">🍳 품질 이슈</option>
+                <option value="납품">🫙 납품 관련</option>
+                <option value="수거">♻️ 폐유 수거</option>
+                <option value="계산서">📄 계산서/정산</option>
+                <option value="앱">📱 앱 사용법</option>
+                <option value="기타">💬 기타</option>
+              </select>
+            </div>
+            <div style="margin-bottom:12px;">
+              <label style="font-size:12px;font-weight:700;color:var(--gray);margin-bottom:6px;display:block;">업체명</label>
+              <input id="askBiz" type="text" placeholder="업체명을 입력하세요" style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-light);border-radius:8px;font-size:13px;font-family:var(--font-body);box-sizing:border-box;">
+            </div>
+            <div style="margin-bottom:16px;">
+              <label style="font-size:12px;font-weight:700;color:var(--gray);margin-bottom:6px;display:block;">문의 내용</label>
+              <textarea id="askContent" rows="4" placeholder="문의 내용을 자세히 입력해주세요" style="width:100%;padding:10px 12px;border:1.5px solid var(--gray-light);border-radius:8px;font-size:13px;font-family:var(--font-body);box-sizing:border-box;resize:vertical;"></textarea>
+            </div>
+            <button onclick="submitAsk()" style="width:100%;background:var(--green-main);border:none;border-radius:10px;padding:13px;font-size:14px;font-weight:700;cursor:pointer;color:#fff;font-family:var(--font-body);">✉️ 문의 접수하기</button>
+          </div>
+          <!-- 접수된 문의 목록 (관리자에게만 보임) -->
+          <div id="askListSection" style="display:none;">
+            <div style="font-size:14px;font-weight:800;margin-bottom:12px;">📬 접수된 문의 <span id="askCount" style="font-size:12px;color:var(--gray);font-weight:500;"></span></div>
+            <div id="askList"></div>
+          </div>
+        </div>
+
+      </div>
+    </div>
